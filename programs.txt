@@ -1,0 +1,35 @@
+even or odd
+factorial
+prime number
+swap of two variable without third variable
+fibonacci series
+leap year
+armstrong number
+reverse number
+sum of digit
+min max of array
+area of triangle
+binary to decimal
+elements of matrix
+transpose of matrix
+SORTING
+insertion sort
+selection sort
+bubble sort
+ARRAY
+find largest
+find smallest
+find sum
+find product
+sorting of array
+even odd in array
+STRING
+to upppercase
+to lower case
+reverse striing
+functions of string class
+string class
+POINTER
+creating pointter
+get memory address and value
+modify pointers

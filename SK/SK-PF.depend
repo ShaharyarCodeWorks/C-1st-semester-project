@@ -1,0 +1,11 @@
+# depslib dependency file v1.0
+1702144281 source:c:\users\paras tech\desktop\sk-pf\main.cpp
+	<iostream>
+	<fstream>
+	<string>
+
+1702144281 source:c:\users\paras tech\onedrive\desktop\sk\main.cpp
+	<iostream>
+	<fstream>
+	<string>
+

@@ -1,0 +1,11 @@
+ISSUED BOOK DETAILS
+
+ISBN: 1
+TITLE: richdad
+AUTHOR: robert
+EDITION: 1st
+PUBLICATION: 999
+ISSUED TO:
+Student ID: 23
+Student Name: khan
+

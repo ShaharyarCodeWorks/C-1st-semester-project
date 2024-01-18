@@ -1,0 +1,354 @@
+// BY SHAHARYAR KHAN
+#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+// Define Student structure
+struct Student {
+    int studentID;
+    string name;
+};
+
+// Define Book structure
+struct Book {
+    string isbn, title, author, edition, publication;
+    Student student;
+    bool issued;
+};
+
+const int maxBooks = 100;
+Book books[maxBooks]; // Array to store books
+
+int counter = 0; // variable for books count
+
+// Function i used in this program
+void addBook();
+void deleteBook();
+void searchBook();
+void viewAllBooks();
+void issueBook();
+void issuedBookList();
+void updateBook();
+
+// Function to add books
+void addBook() {
+    if (counter < maxBooks) {
+        cout << "ADD BOOK\n\n";
+        cout << "Enter ISBN: ";
+        getline(cin, books[counter].isbn);
+        cout << "Enter Title: ";
+        getline(cin, books[counter].title);
+        cout << "Enter Author: ";
+        getline(cin, books[counter].author);
+        cout << "Enter Edition: ";
+        getline(cin, books[counter].edition);
+        cout << "Enter Publication: ";
+        getline(cin, books[counter].publication);
+
+        // Open "khan.txt" for append
+        ofstream File("khan.txt", ios::app);//append used here
+        if (File.is_open()) {
+            // Save book details to "khan.txt"
+            File << books[counter].isbn << " " << books[counter].title << " " << books[counter].author << " " << books[counter].edition << " " << books[counter].publication << endl;
+
+            File.close();
+            cout << "BOOK RECORDS SAVED SUCCESSFULLY!\n";
+
+            counter++; // Increment the counter as a new book has been added
+        } else {
+            cout << "UNABLE TO OPEN FILE FOR WRITING!\n";
+        }
+    } else {
+        cout << "YOU HAVE REACHED THE MAXIMUM NUMBER OF BOOKS TO BE ADDED!\n";
+    }
+}
+
+// Function to delete a book
+void deleteBook() {
+    cout << "RESTRICTED!\n";
+}
+
+// Function to search  a book
+void searchBook() {
+    if (counter == 0) {
+        cout << "THERE IS NO BOOK TO SEARCH!\n";
+        return;
+    }
+
+    string searchISBN;
+    cout << "SEARCH BOOK\n\n";
+    cout << "Enter ISBN to search: ";
+    getline(cin, searchISBN);
+
+    bool bookFound = false;
+
+    // Open "khan.txt" for reading
+    ifstream file("khan.txt");
+    if (file.is_open()) {
+        while (file >> books[counter].isbn >> books[counter].title >> books[counter].author >> books[counter].edition >> books[counter].publication) {
+            if (books[counter].isbn == searchISBN) {
+                cout << "\nBOOK FOUND!\n\n";
+                cout << "ISBN: " << books[counter].isbn << endl;
+                cout << "TITLE: " << books[counter].title << endl;
+                cout << "AUTHOR: " << books[counter].author << endl;
+                cout << "EDITION: " << books[counter].edition << endl;
+                cout << "PUBLICATION: " << books[counter].publication << endl;
+
+                bookFound = true;
+                break; // Stop searching for book
+            }
+            counter++;
+        }
+
+        file.close();
+    } else {
+        cout << "UNABLE TO OPEN FILE FOR READING!\n";
+        return;
+    }
+
+    if (!bookFound) {
+        cout << "\nBOOK NOT FOUND!\n";
+    }
+}
+
+// Function to view all books
+void viewAllBooks() {
+    cout << "VIEW ALL BOOKS\n\n";
+    if (counter == 0)
+        cout << "NO BOOKS FOUND!";
+    ifstream file("khan.txt"); // Open "khan.txt" for reading
+
+    if (file.is_open()) {
+        while (file >> books[counter].isbn >> books[counter].title >> books[counter].author >> books[counter].edition >> books[counter].publication) {
+            cout << "BOOK DETAILS\n\n";
+            cout << "ISBN: " << books[counter].isbn << endl;
+            cout << "TITLE: " << books[counter].title << endl;
+            cout << "AUTHOR: " << books[counter].author << endl;
+            cout << "EDITION: " << books[counter].edition << endl;
+            cout << "PUBLICATION: " << books[counter].publication << endl
+                 << endl;
+
+            counter++;
+        }
+
+        file.close();
+    } else {
+        cout << "UNABLE TO OPEN FILE FOR READING!\n";
+    }
+}
+
+// Function to issue a book to the student
+void issueBook() {
+    if (counter == 0) {
+        cout << "THERE IS NO BOOK TO ISSUE!\n";
+        return;
+    }
+
+    string issueISBN;
+    cout << "ISSUE BOOK\n\n";
+    cout << "Enter ISBN to issue: ";
+    getline(cin, issueISBN);
+
+    ofstream File("khan1.txt", ios::app);//appened
+    if (!File.is_open()) {
+        cout << "UNABLE TO OPEN FILE FOR WRITING!\n";
+        return;
+    }
+
+    for (int i = 0; i < counter; i++) {
+        if (books[i].isbn == issueISBN) {
+            if (!books[i].issued) {
+                // Mark the book as issued
+                books[i].issued = true;
+
+                // Get student information
+                cout << "Enter Student ID: ";
+                cin >> books[i].student.studentID;
+                cin.ignore(); // Ignore the newline character
+
+                cout << "Enter Student Name: ";
+                getline(cin, books[i].student.name);
+
+                // Write issued book information to the file
+                File << "ISSUED BOOK DETAILS\n\n";
+                File << "ISBN: " << books[i].isbn << endl;
+                File << "TITLE: " << books[i].title << endl;
+                File << "AUTHOR: " << books[i].author << endl;
+                File << "EDITION: " << books[i].edition << endl;
+                File << "PUBLICATION: " << books[i].publication << endl;
+                File << "ISSUED TO:\n";
+                File << "Student ID: " << books[i].student.studentID << endl;
+                File << "Student Name: " << books[i].student.name << endl
+                     << endl;
+
+                cout << "\nBOOK ISSUED SUCCESSFULLY!\n";
+            } else {
+                cout << "\nBOOK IS ALREADY ISSUED!\n";
+            }
+
+            File.close();
+            return;
+        }
+    }
+
+    cout << "\nBOOK NOT FOUND!\n";
+    File.close();
+}
+
+
+// Function to display the list of issued books
+void issuedBookList() {
+    cout << "VIEW ISSUED BOOKS\n\n";
+
+    ifstream File("khan1.txt");
+    if (File.is_open()) {
+        while (File) {
+            string line;
+            getline(File, line);
+
+            if (line == "ISSUED BOOK DETAILS") {
+                cout << "ISSUED BOOK DETAILS\n\n";
+                getline(File, line);
+                cout << "ISBN: " << line << endl;
+
+                // Output issued book details
+                for (int i = 0; i < 6; ++i) {
+                    getline(File, line);
+                    cout << line << endl;
+                }
+
+                // Display information about to whom the book is issued
+                getline(File, line); // "ISSUED TO:"
+                cout << line << endl;
+                getline(File, line); // "Student ID:"
+                cout << line << endl;
+                getline(File, line); // "Student Name:"
+                cout << line << endl;
+
+                cout << endl;
+            }
+        }
+
+        File.close();
+    } else {
+        cout << "UNABLE TO OPEN FILE FOR READING!\n";
+    }
+}
+
+
+// Function to update book details
+void updateBook() {
+    if (counter == 0) {
+        cout << "THERE IS NO BOOK TO UPDATE!\n";
+        return;
+    }
+
+    string updateISBN;
+    cout << "UPDATE BOOK\n\n";
+    cout << "Enter ISBN to update: ";
+    getline(cin, updateISBN);
+
+    for (int i = 0; i < counter; i++) {
+        if (books[i].isbn == updateISBN) {
+            cout << "\nBOOK FOUND!\n\n";
+            cout << "Current Details:\n";
+            cout << "ISBN: " << books[i].isbn << endl;
+            cout << "TITLE: " << books[i].title << endl;
+            cout << "AUTHOR: " << books[i].author << endl;
+            cout << "EDITION: " << books[i].edition << endl;
+            cout << "PUBLICATION: " << books[i].publication << endl;
+
+            // Get updatede details from the userr
+            cout << "\nEnter New Details:\n";
+            cout << "Enter Title: ";
+            getline(cin, books[i].title);
+            cout << "Enter Author: ";
+            getline(cin, books[i].author);
+            cout << "Enter Edition: ";
+            getline(cin, books[i].edition);
+            cout << "Enter Publication: ";
+            getline(cin, books[i].publication);
+
+            // Update the file with new information
+            ofstream File("khan1.txt");
+
+            if (File.is_open()) {
+                for (int j = 0; j < counter; j++) {
+                    File << books[j].isbn << " " << books[j].title << " " << books[j].author << " " << books[j].edition << " " << books[j].publication << endl;
+                }
+
+                File.close();
+                cout << "BOOK RECORDS UPDATED AND SAVED SUCCESSFULLY!\n";
+            } else {
+                cout << "UNABLE TO OPEN FILE FOR WRITING!\n";
+            }
+
+            return;
+        }
+    }
+
+    cout << "\nBOOK NOT FOUND!\n";
+}
+
+int main() {
+    string choice;
+
+    // Loading data from file before entering the main loop
+    ifstream File("khan.txt");
+    if (File.is_open()) {
+        while (counter < maxBooks && File >> books[counter].isbn >> books[counter].title >> books[counter].author >> books[counter].edition >> books[counter].publication) {
+            File.ignore(); // ignore newline
+            counter++;
+        }
+        File.close();
+    }
+
+    do {
+        cout << endl;
+        cout << "                                       SOFTWARE DEVELOPED BY SHAHARYAR KHAN\n\n";
+        cout << "                                      ----------LIBRARY MANAGEMENT SYSTEM----------\n\n";
+        cout << "                                                    [1] ADD BOOK\n";
+        cout << "                                                    [2] DELETE LIST\n";
+        cout << "                                                    [3] SEARCH BOOK\n";
+        cout << "                                                    [4] VIEW ALL BOOKS\n";
+        cout << "                                                    [5] ISSUE BOOK TO STUDENT\n";
+        cout << "                                                    [6] ISSUED BOOK LIST\n";
+        cout << "                                                    [7] UPDATE BOOK DETAILS\n";
+        cout << "                                                    [8] EXIT\n\n";
+        cout << "                                                        ENTER CHOICE: ";
+        getline(cin, choice);
+        system("CLS");
+
+        if (choice == "1") {
+            addBook();
+        } else if (choice == "2") {
+            deleteBook();
+        } else if (choice == "3") {
+            searchBook();
+        } else if (choice == "4") {
+            viewAllBooks();
+        } else if (choice == "5") {
+            issueBook();
+        } else if (choice == "6") {
+            issuedBookList();
+        } else if (choice == "7") {
+            updateBook();
+        } else if (choice == "8") {
+            // Saves data to file before exit
+            ofstream File("khan.txt");
+            for (int i = 0; i < counter; i++) {
+                File << books[i].isbn << " " << books[i].title << " " << books[i].author << " " << books[i].edition << " " << books[i].publication << endl;
+            }
+            File.close();
+            exit(0);
+        } else {
+            cout << "INVALID CHOICE! PLEASE TRY AGAIN.\n";
+        }
+
+    } while (true);
+
+    return 0;
+}
+//Program end
